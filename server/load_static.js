@@ -8,7 +8,7 @@ const __dirname = import.meta.dirname;
 const client_dir = path.resolve(__dirname, '../client');
 
 export default function loadStatic(req, res) {
-	const parsed_url = url.parse(req.url, true);
+	const parsed_url = new URL(req.url, `http://${req.headers.host}`);
 	const filePath = path.join(client_dir, parsed_url.pathname === '/' ? 'index.html' : parsed_url.pathname);
 	let contentType = mime.getType(filePath) || 'text/html';
 

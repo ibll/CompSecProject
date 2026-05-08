@@ -197,10 +197,8 @@ input:focus, button:focus {
 /* Chat History */
 /** * * * * * * */
 
-#chat_history {
+#chat_container {
     width: 100%;
-    max-width: 60rem;
-    margin: 0 auto;
     padding: 5rem 1rem 1rem 1rem;
     box-sizing: border-box;
 
@@ -210,7 +208,10 @@ input:focus, button:focus {
     overflow-y: auto;
 }
 
-.system {
+#chat_history {
+}
+
+.notification {
     padding: 2rem 0;
 
     color: var(--rosewater);
@@ -220,13 +221,16 @@ input:focus, button:focus {
 }
 
 .message {
-    margin-top: 0.5rem;
+    padding: 0.25rem 0;
 
     .user {
         display: flex;
         flex-direction: row;
         align-items: center;
         gap: 0.5rem;
+
+        max-width: 60rem;
+        margin: 0 auto;
 
         margin-top: 1.5rem;
         margin-bottom: 0.5rem;
@@ -253,6 +257,9 @@ input:focus, button:focus {
         font-size: 0.65rem;
         color: var(--grey);
 
+        max-width: 60rem;
+        margin: 0 auto 0.5rem;
+
         text-wrap: balance;
         overflow-wrap: anywhere;
         word-break: break-all;
@@ -260,10 +267,17 @@ input:focus, button:focus {
     }
 
     .plaintext {
-        margin-top: 0.5rem;
+        max-width: 60rem;
+        margin: 0 auto;
+
+
         text-align: justify;
         -webkit-hyphens: auto; /* Safari support */
         hyphens: auto;
+    }
+
+    &:hover {
+        background-color: var(--popup-trans);
     }
 }
 
@@ -276,9 +290,22 @@ input:focus, button:focus {
     align-self: flex-end;
 }
 
-#encryption {
+#name_and_encryption {
+	display: flex;
+    flex-direction: row;
+	align-items: stretch;
+}
+
+
+#text_and_send {
+	display: flex;
+    flex-direction: row;
+	align-items: stretch;
+}
+
+#name {
     color: var(--label);
-    border-radius: 20px 20px 0 0 !important;
+    border-radius: 20px 0 0 0 !important;
     border-bottom: 0;
 
     &:focus, &:hover {
@@ -286,10 +313,16 @@ input:focus, button:focus {
     }
 }
 
-#text_and_send {
-	display: flex;
-    flex-direction: row;
-	align-items: stretch;
+#encryption {
+    color: var(--label);
+    border-radius: 0 20px 0 0 !important;
+    border-bottom: 0;
+    border-left: 0;
+
+    &:focus, &:hover {
+        padding-bottom: calc(1rem - 2px) !important;
+        padding-left: calc(1rem - 2px) !important;
+    }
 }
 
 #textbox {
