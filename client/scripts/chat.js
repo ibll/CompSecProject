@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 const chat_API = {}
 
-chat_API.appendMessage = function (name, ciphertext, plaintext, icon = "happy") {
+chat_API.appendMessage = function (name, ciphertext, plaintext, color = "var(--text)", icon = "happy") {
     if (!chat_history) {
         message_queue.push(() => chat_API.appendMessage(name, ciphertext, plaintext, icon));
         return;
@@ -40,7 +40,7 @@ chat_API.appendMessage = function (name, ciphertext, plaintext, icon = "happy") 
         <div class="message">
             ${previous_name != name ? user_info_element : ''}
             ${ciphertext ? ciphertext_element : ''}
-            <p class="plaintext">${plaintext}</p>
+            <p class="plaintext" style="color: ${color};">${plaintext}</p>
         </div>
     `;
 

@@ -1,6 +1,7 @@
 import server from './events/outgoing.js';
-import toast from './scripts/toast.js'
-import chat from './scripts/chat.js'
+import chat from './scripts/chat.js';
+import crypto from './scripts/crypto.js';
+import toast from './scripts/toast.js';
 
 // Server Connection
 
@@ -99,11 +100,9 @@ function tryConnect() {
 // Elements
 
 const name_input = document.getElementById('name');
-const encryption_input = document.getElementById('encryption');
+const password_input = document.getElementById('encryption');
 const textbox_input = document.getElementById('textbox');
 const send_button = document.getElementById('send');
-
-// Set top text
 
 // Buttons
 
@@ -111,13 +110,48 @@ textbox_input.addEventListener("keydown", (event) => {
     if (event.key === 'Enter') send_button.click();
 });
 
-send_button.addEventListener("click", () => {
-    const name_content = name_input.value;
-    const encryption_content = encryption_input.value;
-    const message_content = textbox_input.value;
-    if (!message_content) return;
+password_input.addEventListener("change", async () => {
+    const password = password_input.value;
 
-    textbox_input.value = ""
+    await crypto.setup(password);
+    chat.appendNotification("Password Set")
+});
 
-    server.sendPlaintext(name_content ? name_content : "Anonymous", message_content)
+send_button.addEventListener("click", async () => {
+    const name = name_input.value || "Anonymous";
+    const password = password_input.value;
+    const message = textbox_input.value;
+    if (!message) return;
+
+
+    if (!password) {
+        // Plaintext Message
+
+        server.sendPlaintext(name, message);
+        textbox_input.value = "";
+        return;
+    }
+
+    // Ciphertext Message
+
+    if (!crypto.ready()) {
+        await crypto.setup(password);
+        chat.appendNotification("Password Set")
+    }
+
+    try {
+        if (Math.random() < 0.2) {
+            await crypto.rotate_key();
+            chat.appendNotification(`Rotated key to version ${crypto.get_key_ver()}`);
+        }
+
+        const {iv, ciphertext} = await crypto.encrypt(message);
+        const version = crypto.get_key_ver();
+        const fingerprint = crypto.get_fingerprint();
+
+        textbox_input.value = "";
+        server.sendCiphertext(name, iv, ciphertext, version, fingerprint);
+    } catch (e) {
+        console.error("Failed to encrypt!", e);
+    }
 });
