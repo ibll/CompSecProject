@@ -104,6 +104,41 @@ const password_input = document.getElementById('encryption');
 const textbox_input = document.getElementById('textbox');
 const send_button = document.getElementById('send');
 
+// Send Message
+
+async function send_message(name, password, message) {
+    if (!message) return;
+
+    // Plaintext Message
+    if (!password) {
+        server.sendPlaintext(name, message);
+        textbox_input.value = "";
+        return;
+    }
+
+    // Ciphertext Message
+    if (!crypto.ready()) {
+        await crypto.setup(password);
+        chat.appendNotification("Password Set")
+    }
+
+    try {
+        // Chance to update key
+        if (Math.random() < 0.2) {
+            await crypto.rotate_key();
+            chat.appendNotification(`Rotated key to version ${crypto.get_key_ver()}`);
+        }
+
+        const {iv, ciphertext} = await crypto.encrypt(message);
+        const version = crypto.get_key_ver();
+
+        textbox_input.value = "";
+        server.sendCiphertext(name, iv, ciphertext, version);
+    } catch (e) {
+        console.error("Failed to encrypt!", e);
+    }
+}
+
 // Buttons
 
 textbox_input.addEventListener("keydown", (event) => {
@@ -121,36 +156,6 @@ send_button.addEventListener("click", async () => {
     const name = name_input.value || "Anonymous";
     const password = password_input.value;
     const message = textbox_input.value;
-    if (!message) return;
 
-
-    if (!password) {
-        // Plaintext Message
-
-        server.sendPlaintext(name, message);
-        textbox_input.value = "";
-        return;
-    }
-
-    // Ciphertext Message
-
-    if (!crypto.ready()) {
-        await crypto.setup(password);
-        chat.appendNotification("Password Set")
-    }
-
-    try {
-        if (Math.random() < 0.2) {
-            await crypto.rotate_key();
-            chat.appendNotification(`Rotated key to version ${crypto.get_key_ver()}`);
-        }
-
-        const {iv, ciphertext} = await crypto.encrypt(message);
-        const version = crypto.get_key_ver();
-
-        textbox_input.value = "";
-        server.sendCiphertext(name, iv, ciphertext, version);
-    } catch (e) {
-        console.error("Failed to encrypt!", e);
-    }
+    await send_message(name, password, message);
 });

@@ -7,7 +7,7 @@ const decoder = new TextDecoder();
 
 // Base64
 
-function ArrBuffToB64(buffer) {
+function arr_buff_to_b64(buffer) {
     const bytes = new Uint8Array(buffer);
     let binary = '';
     for (let i = 0; i < bytes.byteLength; i++) {
@@ -16,7 +16,7 @@ function ArrBuffToB64(buffer) {
     return window.btoa(binary);
 }
 
-function b64ToArrBuff(base64) {
+function b64_to_arr_buff(base64) {
     const binary_string = window.atob(base64);
     const len = binary_string.length;
     const bytes = new Uint8Array(len);
@@ -46,7 +46,6 @@ crypto_API.setup = async function(password, salt_str = "random_salt_asdkljfa;lsk
         ["deriveBits", "deriveKey"]
     );
 
-    // Derive the actual AES-CBC 256-bit key using PBKDF2
     active_key = await window.crypto.subtle.deriveKey(
         {
             name: "PBKDF2",
@@ -56,7 +55,7 @@ crypto_API.setup = async function(password, salt_str = "random_salt_asdkljfa;lsk
         },
         key_material,
         { name: "AES-CBC", length: 256 },
-        true, // Must be true so we can extract it for the ratchet later
+        true, // Must be true to extract for key update
         ["encrypt", "decrypt"]
     );
 
@@ -78,8 +77,8 @@ crypto_API.encrypt = async function(plaintext) {
     );
 
     return {
-        iv: ArrBuffToB64(iv.buffer),
-        ciphertext: ArrBuffToB64(ciphertext_buffer)
+        iv: arr_buff_to_b64(iv.buffer),
+        ciphertext: arr_buff_to_b64(ciphertext_buffer)
     }
 }
 
@@ -89,8 +88,8 @@ crypto_API.decrypt = async function(iv_b64, ciphertext_b64) {
         return;
     }
 
-    const ciphertext = b64ToArrBuff(ciphertext_b64);
-    const iv = b64ToArrBuff(iv_b64);
+    const ciphertext = b64_to_arr_buff(ciphertext_b64);
+    const iv = b64_to_arr_buff(iv_b64);
 
     try {
         const decrypted_buff = await window.crypto.subtle.decrypt(
