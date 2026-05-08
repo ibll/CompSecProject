@@ -15,8 +15,8 @@ client_API.sendPlaintext = function (ws, name, content) {
     sendToClient(ws, { type: "receive_plaintext", name, content });
 }
 
-client_API.sendCiphertext = function (ws, name, iv, ciphertext, version, fingerprint) {
-    sendToClient(ws, { type: "receive_ciphertext", name, iv, ciphertext, version, fingerprint });
+client_API.sendCiphertext = function (ws, name, iv, ciphertext, version) {
+    sendToClient(ws, { type: "receive_ciphertext", name, iv, ciphertext, version });
 }
 
 client_API.sendNotification = function (ws, content) {
@@ -27,8 +27,8 @@ client_API.broadcastPlaintext = function (name, content) {
     sendToAll({ type: "receive_plaintext", name, content });
 }
 
-client_API.broadcastCiphertext = function (name, iv, ciphertext, version, fingerprint) {
-    sendToAll({ type: "receive_ciphertext", name, iv, ciphertext, version, fingerprint });
+client_API.broadcastCiphertext = function (name, iv, ciphertext, version) {
+    sendToAll({ type: "receive_ciphertext", name, iv, ciphertext, version });
 }
 
 client_API.broadcastNotification = function (content) {

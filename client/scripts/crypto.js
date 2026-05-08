@@ -1,6 +1,6 @@
 let active_key = null;
 let key_ver = 0;
-let key_fingerprint = null;
+let target_key_ver = 0;
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
@@ -35,7 +35,6 @@ crypto_API.setup = async function(password, salt_str = "random_salt_asdkljfa;lsk
 
     if (!password) {
         active_key = null;
-        key_fingerprint = null;
         return;
     }
 
@@ -46,10 +45,6 @@ crypto_API.setup = async function(password, salt_str = "random_salt_asdkljfa;lsk
         false,
         ["deriveBits", "deriveKey"]
     );
-
-    const fingerprint_material = encoder.encode(password + "random_fingerprint_Sfalksdjflk;asdf");
-    const hash_buffer = await window.crypto.subtle.digest("SHA-256", fingerprint_material);
-    key_fingerprint = ArrBuffToB64(hash_buffer).substring(0, 8);
 
     // Derive the actual AES-CBC 256-bit key using PBKDF2
     active_key = await window.crypto.subtle.deriveKey(
@@ -64,6 +59,8 @@ crypto_API.setup = async function(password, salt_str = "random_salt_asdkljfa;lsk
         true, // Must be true so we can extract it for the ratchet later
         ["encrypt", "decrypt"]
     );
+
+    crypto_API.sync_ver(target_key_ver);
 }
 
 crypto_API.encrypt = async function(plaintext) {
@@ -129,9 +126,11 @@ crypto_API.rotate_key = async function() {
 }
 
 crypto_API.sync_ver = async function(target_ver) {
+    target_key_ver = target_ver;
+
     if (!active_key) return;
 
-    while (key_ver < target_ver) {
+    while (key_ver < target_key_ver) {
         await crypto_API.rotate_key();
     }
 
@@ -140,10 +139,6 @@ crypto_API.sync_ver = async function(target_ver) {
 
 crypto_API.get_key_ver = function() {
     return key_ver;
-}
-
-crypto_API.get_fingerprint = function() {
-    return key_fingerprint;
 }
 
 crypto_API.ready = function() {

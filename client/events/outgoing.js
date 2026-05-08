@@ -24,8 +24,8 @@ server.sendPlaintext = function (name, content) {
   sendToServer({ type: "send_plaintext", name, content });
 }
 
-server.sendCiphertext = function(name, iv, ciphertext, version, fingerprint) {
-  sendToServer({ type: "send_ciphertext", name, iv, ciphertext, version, fingerprint });
+server.sendCiphertext = function(name, iv, ciphertext, version) {
+  sendToServer({ type: "send_ciphertext", name, iv, ciphertext, version });
 }
 
 export default server;

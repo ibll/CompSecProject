@@ -5,9 +5,14 @@ export function sendPlaintext(_ws, name, content) {
     client.broadcastPlaintext(name, content);
 }
 
-export function sendCiphertext(_ws, name, iv, ciphertext, version, fingerprint) {
-    console.log(`${name}: ${iv}, ${iv, version, fingerprint, ciphertext}`);
-    client.broadcastCiphertext(name, iv, ciphertext, version, fingerprint);
+export function sendCiphertext(_ws, name, iv, ciphertext, version) {
+    console.log(`
+${name}
+----------
+iv:${iv}, ver:${version}
+----------
+${ciphertext}`);
+    client.broadcastCiphertext(name, iv, ciphertext, version);
 }
 
 export function sendNotification(ws, content) {

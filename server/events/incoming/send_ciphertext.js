@@ -5,7 +5,6 @@ export default async (ws, payload) => {
     const iv = payload.iv;
     const ciphertext = payload.ciphertext;
     const version = payload.version;
-    const fingerprint = payload.fingerprint;
 
-    sendCiphertext(ws, name, iv, ciphertext, version, fingerprint);
+    sendCiphertext(ws, name, iv, ciphertext, version);
 }

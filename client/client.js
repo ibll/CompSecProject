@@ -147,10 +147,9 @@ send_button.addEventListener("click", async () => {
 
         const {iv, ciphertext} = await crypto.encrypt(message);
         const version = crypto.get_key_ver();
-        const fingerprint = crypto.get_fingerprint();
 
         textbox_input.value = "";
-        server.sendCiphertext(name, iv, ciphertext, version, fingerprint);
+        server.sendCiphertext(name, iv, ciphertext, version);
     } catch (e) {
         console.error("Failed to encrypt!", e);
     }
