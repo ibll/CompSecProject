@@ -1,0 +1,24 @@
+{
+  "name": "comp-sec-project",
+  "version": "1.0.0",
+  "description": "Computer Security Project",
+  "homepage": "https://github.com/ibll/CompSecProject",
+  "bugs": {
+    "url": "https://github.com/ibll/CompSecProject/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ibll/CompSecProject.git"
+  },
+  "license": "ISC",
+  "author": "ibll",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "mime": "^4.1.0",
+    "ws": "^8.20.0"
+  }
+}
