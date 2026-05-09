@@ -1,6 +1,8 @@
 # Computer Security Project
 by Isbell
 
+[Website](https://chat.starblot.com)
+
 # Installation and Running
 
 - Ensure you have [Node.js](https://nodejs.org/) installed on your machine!
