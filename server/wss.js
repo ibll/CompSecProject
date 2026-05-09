@@ -29,6 +29,8 @@ async function wssConnection(ws, response) {
             let payload = JSON.parse(data)
             if (!payload.type) return;
 
+            console.log(payload);
+
             const filePath = path.join(__dirname, SERVER_EVENTS_DIR, payload.type + '.js');
             fs.readFile(filePath, (err) => {
                 if (err) return console.error(`Message type '${payload.type}' not found`);
